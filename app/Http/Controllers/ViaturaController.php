@@ -54,9 +54,11 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show(Viatura $viatura)
+    public function show($id)
     {
         //
+         $viatura = Viatura::findOrFail($id);
+    return view('viaturas.show', compact('viatura'));
     }
 
     /**

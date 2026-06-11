@@ -33,16 +33,29 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // validar os dados
+
         $request->validate([
         'nome'  => 'required',
         'email' => 'required|email|unique:clientes',
+        'telefone' => 'nullable',
+        'morada' => 'nullable',
         'nif'   => 'required|unique:clientes',
     ]);
 
-    Cliente::create($request->all());
-    return redirect()->route('clientes.index');
+        // gravar na base de dados
+        Cliente::create([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'telefone' => $request->telefone,
+            'morada' => $request->morada,
+            'nif' => $request->nif,
+        ]);
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente criado com sucesso');
     }
+        //
 
     /**
      * Display the specified resource.
