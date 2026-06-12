@@ -4,97 +4,105 @@ namespace App\Http\Controllers;
 
 use App\Models\Viatura;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ViaturaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-   public function index(Request $request)
-{
-    $query = Viatura::query();
+    public function index(Request $request)
+    {
+        $query = Viatura::query();
 
-    // Pesquisa
-    if ($request->search) {
-        $query->where('marca', 'like', "%{$request->search}%")
-              ->orWhere('modelo', 'like', "%{$request->search}%")
-              ->orWhere('matricula', 'like', "%{$request->search}%");
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('marca', 'like', "%{$request->search}%")
+                  ->orWhere('modelo', 'like', "%{$request->search}%")
+                  ->orWhere('matricula', 'like', "%{$request->search}%");
+            });
+        }
+
+        $order = $request->order ?? 'id';
+        $query->orderBy($order);
+
+        $viaturas = $query->get();
+        return view('viaturas.index', compact('viaturas'));
     }
 
-    // Ordenação
-    $order = $request->order ?? 'id';
-    $query->orderBy($order);
-
-    $viaturas = $query->get();
-    return view('viaturas.index', compact('viaturas'));
-}
-
-public function create()
-{
-    return view('viaturas.create');
-}
-
-public function store(Request $request)
-{
-    $request->validate([
-        'marca'       => 'required',
-        'modelo'      => 'required',
-        'matricula'   => 'required|unique:viaturas',
-        'ano'         => 'required|digits:4',
-        'quilometros' => 'required|integer',
-        'preco'       => 'required|numeric',
-        'foto'        => 'nullable|image|max:2048',
-    ]);
-
-    $data = $request->all();
-
-    // Upload da foto
-    if ($request->hasFile('foto')) {
-        $data['foto'] = $request->file('foto')->store('viaturas', 'public');
+    public function create()
+    {
+        return view('viaturas.create');
     }
 
-    Viatura::create($data);
-    return redirect()->route('viaturas.index')->with('sucesso', 'Viatura criada com sucesso!');
-}
-    /**
-     * Display the specified resource.
-     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'marca'       => 'required',
+            'modelo'      => 'required',
+            'matricula'   => 'required|unique:viaturas',
+            'ano'         => 'required|digits:4',
+            'quilometros' => 'required|integer',
+            'preco'       => 'required|numeric',
+            'foto'        => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except('foto');
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('viaturas', 'public');
+        }
+
+        Viatura::create($data);
+        return redirect()->route('viaturas.index')->with('sucesso', 'Viatura criada com sucesso!');
+    }
+
     public function show($id)
     {
-        //
-         $viatura = Viatura::findOrFail($id);
-    return view('viaturas.show', compact('viatura'));
+        $viatura = Viatura::findOrFail($id);
+        return view('viaturas.show', compact('viatura'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Viatura $viatura)
     {
-        //
         return view('viaturas.edit', compact('viatura'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
-        //
-         $viatura = Viatura::findOrFail($id);
-        $viatura->update($request->all());
-    return redirect()->route('viaturas.index');
+        $viatura = Viatura::findOrFail($id);
+
+        $request->validate([
+            'marca'       => 'required',
+            'modelo'      => 'required',
+            'matricula'   => 'required|unique:viaturas,matricula,' . $id,
+            'ano'         => 'required|digits:4',
+            'quilometros' => 'required|integer',
+            'preco'       => 'required|numeric',
+            'foto'        => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except('foto');
+
+        if ($request->hasFile('foto')) {
+            // Apaga a foto antiga se existir
+            if ($viatura->foto) {
+                Storage::disk('public')->delete($viatura->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('viaturas', 'public');
+        }
+
+        $viatura->update($data);
+        return redirect()->route('viaturas.index')->with('sucesso', 'Viatura atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        //
         $viatura = Viatura::findOrFail($id);
-        $viatura->delete();
-    return redirect()->route('viaturas.index');
 
+        // Apaga a foto ao eliminar a viatura
+        if ($viatura->foto) {
+            Storage::disk('public')->delete($viatura->foto);
+        }
+
+        $viatura->delete();
+        return redirect()->route('viaturas.index')->with('sucesso', 'Viatura apagada com sucesso!');
     }
 }
