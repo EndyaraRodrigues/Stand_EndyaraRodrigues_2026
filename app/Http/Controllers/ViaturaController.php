@@ -29,6 +29,11 @@ class ViaturaController extends Controller
     return view('viaturas.index', compact('viaturas'));
 }
 
+public function create()
+{
+    return view('viaturas.create');
+}
+
 public function store(Request $request)
 {
     $request->validate([
@@ -67,21 +72,29 @@ public function store(Request $request)
     public function edit(Viatura $viatura)
     {
         //
+        return view('viaturas.edit', compact('viatura'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Viatura $viatura)
+    public function update($id, Request $request)
     {
         //
+         $viatura = Viatura::findOrFail($id);
+        $viatura->update($request->all());
+    return redirect()->route('viaturas.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Viatura $viatura)
+    public function destroy($id)
     {
         //
+        $viatura = Viatura::findOrFail($id);
+        $viatura->delete();
+    return redirect()->route('viaturas.index');
+
     }
 }

@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="fw-bold">Detalhes da viatura</h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('content')
     <div class="card shadow-sm">
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $viatura ->id }}</p>
+            <h4 class="mb-3">Detalhes da Viatura</h4>
+            <p><strong>ID:</strong> {{ $viatura->id }}</p>
             <p><strong>Marca:</strong> {{ $viatura->marca }}</p>
             <p><strong>Modelo:</strong> {{ $viatura->modelo }}</p>
             <p><strong>Matrícula:</strong> {{ $viatura->matricula }}</p>
@@ -28,7 +18,5 @@
             <a href="{{ route('viaturas.index') }}" class="btn btn-secondary">Voltar</a>
         </div>
     </div>
-</x-app-layout>
-</body>
-</html>
-        
+@endsection
+

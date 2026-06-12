@@ -15,6 +15,8 @@ class VendaController extends Controller
     public function index()
     {
         //
+        $vendas = Venda::all();
+    return view('vendas.index', compact('vendas'));
     }
 
     /**
@@ -59,9 +61,11 @@ class VendaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Venda $venda)
+    public function show($id)
     {
         //
+         $venda = Venda::findOrFail($id);
+    return view('vendas.show', compact('venda'));
     }
 
     /**
@@ -80,16 +84,22 @@ class VendaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Venda $venda)
+    public function update($id, Request $request)
     {
         //
+         $venda = Venda::findOrFail($id);
+        $venda->update($request->all());
+    return redirect()->route('vendas.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Venda $venda)
+    public function destroy($id)
     {
         //
+        $venda = Venda::findOrFail($id);
+        $venda->delete();
+    return redirect()->route('vendas.index');
     }
 }

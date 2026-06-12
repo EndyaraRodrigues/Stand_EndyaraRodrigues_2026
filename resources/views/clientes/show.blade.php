@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="fw-bold">Detalhes do Cliente</h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('content')
     <div class="card shadow-sm">
         <div class="card-body">
+            <h4 class="mb-3">Detalhes do Cliente</h4>
             <p><strong>ID:</strong> {{ $cliente->id }}</p>
             <p><strong>Nome:</strong> {{ $cliente->nome }}</p>
             <p><strong>Email:</strong> {{ $cliente->email }}</p>
@@ -26,6 +16,4 @@
             <a href="{{ route('clientes.index') }}" class="btn btn-secondary">Voltar</a>
         </div>
     </div>
-</x-app-layout>
-</body>
-</html>
+@endsection
