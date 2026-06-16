@@ -11,13 +11,25 @@ class ClienteController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index()
-    {
-        //
 
-        $clientes = Cliente::all();
-    return view('clientes.index', compact('clientes'));
+        public function index(Request $request)
+{
+    $query = Cliente::query();
+
+    if ($request->search) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nome', 'like', "%{$request->search}%")
+              ->orWhere('email', 'like', "%{$request->search}%")
+              ->orWhere('telefone', 'like', "%{$request->search}%")
+              ->orWhere('nif', 'like', "%{$request->search}%");
+        });
     }
+
+    $clientes = $query->orderBy('id', 'asc')->get();
+
+    return view('clientes.index', compact('clientes'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -60,7 +72,7 @@ class ClienteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
         $cliente = Cliente::findOrFail($id);
@@ -70,7 +82,7 @@ class ClienteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
         $cliente = Cliente::findOrFail($id);
@@ -80,7 +92,7 @@ class ClienteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
         $cliente = Cliente::findOrFail($id);
@@ -91,7 +103,7 @@ class ClienteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
         $cliente = Cliente::findOrFail($id);

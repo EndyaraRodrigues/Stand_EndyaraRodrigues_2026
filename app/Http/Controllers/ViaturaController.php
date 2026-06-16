@@ -21,9 +21,9 @@ class ViaturaController extends Controller
         }
 
         $order = $request->order ?? 'id';
-        $query->orderBy($order);
+        $query->orderBy($order, 'asc');
 
-        $viaturas = $query->get();
+        $viaturas = $query->paginate(10);
         return view('viaturas.index', compact('viaturas'));
     }
 
@@ -54,7 +54,7 @@ class ViaturaController extends Controller
         return redirect()->route('viaturas.index')->with('sucesso', 'Viatura criada com sucesso!');
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $viatura = Viatura::findOrFail($id);
         return view('viaturas.show', compact('viatura'));
@@ -65,7 +65,7 @@ class ViaturaController extends Controller
         return view('viaturas.edit', compact('viatura'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $viatura = Viatura::findOrFail($id);
 
@@ -93,7 +93,7 @@ class ViaturaController extends Controller
         return redirect()->route('viaturas.index')->with('sucesso', 'Viatura atualizada com sucesso!');
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $viatura = Viatura::findOrFail($id);
 

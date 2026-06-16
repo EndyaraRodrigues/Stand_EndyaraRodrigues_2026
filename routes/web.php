@@ -4,13 +4,23 @@ use App\Http\Controllers\ViaturaController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return redirect()->route('register');
+    // Se já estiver autenticado vai para as viaturas
+    if (Auth::check()) {
+        return redirect()->route('viaturas.index');
+    }
+    // Se não estiver, vai para o registo
+    return view('welcome');
 });
 
+// Route::get('/dashboard', function () {
+//     return redirect()->route('viaturas.index');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::get('/dashboard', function () {
-    return redirect()->route('viaturas.index');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

@@ -12,11 +12,27 @@ class VendaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $vendas = Venda::all();
-    return view('vendas.index', compact('vendas'));
+        $query = Venda::query();
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->whereHas('cliente', function ($subq) use ($request) {
+                    $subq->where('nome', 'like', "%{$request->search}%");
+                })
+                ->orWhereHas('viatura', function ($subq) use ($request) {
+                    $subq->where('marca', 'like', "%{$request->search}%")
+                          ->orWhere('modelo', 'like', "%{$request->search}%");
+                })
+                ->orWhere('data_venda', 'like', "%{$request->search}%");
+            });
+        }
+
+        $vendas = $query->orderBy('id', 'asc')->get();
+
+        return view('vendas.index', compact('vendas'));
     }
 
     /**
@@ -61,7 +77,7 @@ class VendaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Venda $venda, int $id)
     {
         //
          $venda = Venda::findOrFail($id);
@@ -84,7 +100,7 @@ class VendaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, Request $request)
+    public function update(int $id, Request $request)
     {
         //
          $venda = Venda::findOrFail($id);
@@ -95,7 +111,7 @@ class VendaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
         $venda = Venda::findOrFail($id);
