@@ -265,7 +265,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
+            <a class="navbar-brand" href="{{ route('viaturas.index') }}">
                 🚗 Stand<span>Auto</span>
             </a>
 
@@ -276,48 +276,58 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav me-auto gap-1">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                           href="{{ route('dashboard') }}">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('viaturas.*') ? 'active' : '' }}"
                            href="{{ route('viaturas.index') }}">
                             <i class="bi bi-car-front"></i> Viaturas
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}"
-                           href="{{ route('clientes.index') }}">
-                            <i class="bi bi-people"></i> Clientes
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('vendas.*') ? 'active' : '' }}"
-                           href="{{ route('vendas.index') }}">
-                            <i class="bi bi-receipt"></i> Vendas
-                        </a>
-                    </li>
+
+                    @auth
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                               href="{{ route('dashboard') }}">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('clientes.*') ? 'active' : '' }}"
+                               href="{{ route('clientes.index') }}">
+                                <i class="bi bi-people"></i> Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('vendas.*') ? 'active' : '' }}"
+                               href="{{ route('vendas.index') }}">
+                                <i class="bi bi-receipt"></i> Vendas
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
 
-                <!-- User Menu -->
-                <div class="dropdown">
-                    <div class="user-badge dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle me-1"></i>
-                        {{ Auth::user()->name ?? 'Utilizador' }}
+                @auth
+                    <!-- User Menu -->
+                    <div class="dropdown">
+                        <div class="user-badge dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>
+                            {{ Auth::user()->name ?? 'Utilizador' }}
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end mt-2 shadow border-0 rounded-3">
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger py-2">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Sair
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="dropdown-menu dropdown-menu-end mt-2 shadow border-0 rounded-3">
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger py-2">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Sair
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                @else
+                    <!-- Visitante: leva à página de boas-vindas para escolher Login ou Criar Conta -->
+                    <a href="{{ route('welcome') }}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+                    </a>
+                @endauth
             </div>
         </div>
     </nav>

@@ -7,9 +7,11 @@
         <h2><i class="bi bi-car-front me-2 text-danger"></i>Viaturas</h2>
         <p>Gestão de todas as viaturas do stand</p>
     </div>
+    @auth
     <a href="{{ route('viaturas.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Nova Viatura
     </a>
+    @endauth
 </div>
 
 {{-- Pesquisa e Ordenação --}}
@@ -95,6 +97,7 @@
                                class="btn btn-sm btn-info text-white" title="Ver">
                                 <i class="bi bi-eye"></i>
                             </a>
+                            @auth
                             <a href="{{ route('viaturas.edit', $viatura) }}"
                                class="btn btn-sm btn-warning" title="Editar">
                                 <i class="bi bi-pencil"></i>
@@ -106,6 +109,7 @@
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
+                            @endauth
                         </div>
                     </td>
                 </tr>

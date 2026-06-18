@@ -72,6 +72,12 @@
             @endif
         </div>
 
+        <p class="text-center mt-4 mb-0">
+            <a href="{{ route('viaturas.index') }}" class="text-muted small text-decoration-none">
+                <i class="bi bi-car-front me-1"></i> Ver viaturas sem fazer login
+            </a>
+        </p>
+
         <p class="text-center text-muted mt-4 mb-0" style="font-size: 0.8rem;">
             Stand Automóveis &copy; {{ date('Y') }}
         </p>
