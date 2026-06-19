@@ -3,10 +3,23 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ViaturaController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EstatisticaController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // Página inicial pública: mostra a lista de viaturas, sem precisar login
 Route::get('/', [ViaturaController::class, 'index'])->name('viaturas.index');
+
+// Página pública de estatísticas: gráficos de vendas, valor, clientes e reviews
+Route::get('/estatisticas', [EstatisticaController::class, 'index'])->name('estatisticas.index');
+
+// Guardar uma nova review - ação pública, qualquer visitante pode avaliar
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+// Página pública de contactos / endereço - apenas leitura, sem necessidade de login
+Route::get('/contactos', function () {
+    return view('contactos');
+})->name('contactos');
 
 // Página "welcome": ecrã de boas-vindas para quem ainda não tem sessão
 Route::get('/welcome', function () {

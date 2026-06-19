@@ -61,7 +61,7 @@
         <div class="d-grid gap-3">
             @if (Route::has('register'))
                 <a href="{{ route('register') }}" class="btn btn-register btn-danger text-white fw-semibold">
-                    ✨ Criar Conta
+                    Criar Conta
                 </a>
             @endif
 

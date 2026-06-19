@@ -258,6 +258,49 @@
             padding: 16px;
             font-size: 0.85rem;
         }
+
+        /* CARDS DE VIATURAS - VITRINE PÚBLICA */
+        .viatura-card {
+            border: none;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        .viatura-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        .viatura-img-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: #f1f1f1;
+        }
+        .viatura-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .viatura-card:hover .viatura-img {
+            transform: scale(1.08);
+        }
+        .viatura-img-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e9ecef, #dee2e6);
+            color: #adb5bd;
+            font-size: 3rem;
+        }
+        .viatura-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            font-size: 0.78rem;
+        }
     </style>
 </head>
 <body>
@@ -274,11 +317,23 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav me-auto gap-1">
+               <ul class="navbar-nav me-auto gap-1">
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('viaturas.*') ? 'active' : '' }}"
                            href="{{ route('viaturas.index') }}">
                             <i class="bi bi-car-front"></i> Viaturas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('estatisticas.*') ? 'active' : '' }}"
+                           href="{{ route('estatisticas.index') }}">
+                            <i class="bi bi-bar-chart-line"></i> Estatísticas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('contactos') ? 'active' : '' }}"
+                           href="{{ route('contactos') }}">
+                            <i class="bi bi-geo-alt"></i> Contactos
                         </a>
                     </li>
 
