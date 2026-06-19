@@ -32,14 +32,15 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Viatura</label>
-                    <select name="viatura_id" class="form-select">
-                        @foreach($viaturas as $viatura)
-                            <option value="{{ $viatura->id }}"
-                                {{ $venda->viatura_id == $viatura->id ? 'selected' : '' }}>
-                                {{ $viatura->marca }} {{ $viatura->modelo }} — {{ $viatura->matricula }}
-                            </option>
-                        @endforeach
-                    </select>
+                   <select name="viatura_id" id="viatura_id" class="form-select">
+    @foreach($viaturas as $viatura)
+        <option value="{{ $viatura->id }}"
+            data-preco="{{ $viatura->preco }}"
+            {{ $venda->viatura_id == $viatura->id ? 'selected' : '' }}>
+            {{ $viatura->marca }} {{ $viatura->modelo }} — {{ $viatura->matricula }}
+        </option>
+    @endforeach
+</select>
                 </div>
 
                 <div class="col-md-4">
@@ -51,7 +52,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Valor da Venda</label>
                     <div class="input-group">
-                        <input type="number" step="0.01" name="valor_venda" class="form-control"
+                        <input type="number" step="0.01" name="valor_venda" id="valor_venda" class="form-control"
                                value="{{ old('valor_venda', $venda->valor_venda) }}">
                         <span class="input-group-text">€</span>
                     </div>
@@ -74,5 +75,13 @@
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('viatura_id').addEventListener('change', function () {
+        const opcao = this.options[this.selectedIndex];
+        const preco = opcao ? opcao.dataset.preco : null;
+        document.getElementById('valor_venda').value = preco ? Number(preco).toFixed(2) : '';
+    });
+</script>
+
 
 @endsection

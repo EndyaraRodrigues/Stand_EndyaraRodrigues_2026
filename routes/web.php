@@ -5,23 +5,29 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EstatisticaController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AvaliacaoController;
 use Illuminate\Support\Facades\Route;
 
-// Página inicial pública: mostra a lista de viaturas, sem precisar login
+// Página inicial
 Route::get('/', [ViaturaController::class, 'index'])->name('viaturas.index');
 
-// Página pública de estatísticas: gráficos de vendas, valor, clientes e reviews
+// Página pública de estatísticas
 Route::get('/estatisticas', [EstatisticaController::class, 'index'])->name('estatisticas.index');
 
-// Guardar uma nova review - ação pública, qualquer visitante pode avaliar
+// Guardar uma nova review
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
-// Página pública de contactos / endereço - apenas leitura, sem necessidade de login
+// Avaliações de carros para venda
+Route::get('/avaliacoes/pedir', [AvaliacaoController::class, 'create'])->name('avaliacoes.create');
+Route::post('/avaliacoes', [AvaliacaoController::class, 'store'])->name('avaliacoes.store');
+Route::get('/avaliacoes/confirmado', [AvaliacaoController::class, 'confirmado'])->name('avaliacoes.pedido.confirmado');
+
+// Página pública de contactos / endereço
 Route::get('/contactos', function () {
     return view('contactos');
 })->name('contactos');
 
-// Página "welcome": ecrã de boas-vindas para quem ainda não tem sessão
+// Página "welcome"
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
@@ -47,6 +53,12 @@ Route::middleware('auth')->group(function () {
     // CRUD de Vendas - só para utilizadores autenticados
     Route::resource('vendas', VendaController::class);
 });
+
+// Gestão de pedidos de avaliação - autenticado
+Route::get('/avaliacoes', [AvaliacaoController::class, 'index'])->name('avaliacoes.index');
+Route::get('/avaliacoes/{avaliacao}', [AvaliacaoController::class, 'show'])->name('avaliacoes.show');
+Route::put('/avaliacoes/{avaliacao}', [AvaliacaoController::class, 'update'])->name('avaliacoes.update');
+Route::delete('/avaliacoes/{avaliacao}', [AvaliacaoController::class, 'destroy'])->name('avaliacoes.destroy');
 
 // Ver detalhes de uma viatura é público - tem de vir DEPOIS do grupo de rotas
 // protegidas de viaturas (create, edit, etc.), para não capturar essas rotas

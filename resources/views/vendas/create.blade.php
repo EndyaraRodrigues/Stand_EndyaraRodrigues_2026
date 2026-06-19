@@ -33,14 +33,16 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Viatura</label>
-                    <select name="viatura_id" class="form-select @error('viatura_id') is-invalid @enderror">
-                        <option value="">-- Selecionar Viatura --</option>
-                        @foreach($viaturas as $viatura)
-                            <option value="{{ $viatura->id }}" {{ old('viatura_id') == $viatura->id ? 'selected' : '' }}>
-                                {{ $viatura->marca }} {{ $viatura->modelo }} — {{ $viatura->matricula }}
-                            </option>
-                        @endforeach
-                    </select>
+                   <select name="viatura_id" id="viatura_id" class="form-select @error('viatura_id') is-invalid @enderror">
+    <option value="">-- Selecionar Viatura --</option>
+    @foreach($viaturas as $viatura)
+        <option value="{{ $viatura->id }}"
+                data-preco="{{ $viatura->preco }}"
+                {{ old('viatura_id') == $viatura->id ? 'selected' : '' }}>
+            {{ $viatura->marca }} {{ $viatura->modelo }} — {{ $viatura->matricula }}
+        </option>
+    @endforeach
+</select>
                     @error('viatura_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
@@ -55,9 +57,9 @@
                 <div class="col-md-4">
                     <label class="form-label">Valor da Venda</label>
                     <div class="input-group">
-                        <input type="number" step="0.01" name="valor_venda"
+                        <input type="number" step="0.01" name="valor_venda" id="valor_venda"
                                class="form-control @error('valor_venda') is-invalid @enderror"
-                               value="{{ old('valor_venda') }}" placeholder="0.00">
+                               value="{{ old('valor_venda') }}" placeholder="0.00" readonly>
                         <span class="input-group-text">€</span>
                     </div>
                     @error('valor_venda') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -80,5 +82,22 @@
         </form>
     </div>
 </div>
+<script>
+    const selectViatura = document.getElementById('viatura_id');
+    const inputValor = document.getElementById('valor_venda');
+
+    function preencherValor() {
+        const opcao = selectViatura.options[selectViatura.selectedIndex];
+        const preco = opcao ? opcao.dataset.preco : null;
+        inputValor.value = preco ? Number(preco).toFixed(2) : '';
+    }
+
+    selectViatura.addEventListener('change', preencherValor);
+
+    if (selectViatura.value) {
+        preencherValor();
+    }
+</script>
+
 
 @endsection

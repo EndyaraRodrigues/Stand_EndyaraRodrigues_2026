@@ -330,6 +330,14 @@
                             <i class="bi bi-bar-chart-line"></i> Estatísticas
                         </a>
                     </li>
+
+                    <li class="nav-item">
+    <a class="nav-link {{ request()->routeIs('avaliacoes.create') ? 'active' : '' }}"
+       href="{{ route('avaliacoes.create') }}">
+        <i class="bi bi-clipboard-check"></i> Avaliar o meu Carro
+    </a>
+</li>
+
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('contactos') ? 'active' : '' }}"
                            href="{{ route('contactos') }}">
@@ -356,6 +364,13 @@
                                 <i class="bi bi-receipt"></i> Vendas
                             </a>
                         </li>
+
+                        <li class="nav-item">
+    <a class="nav-link {{ request()->routeIs('avaliacoes.index') || request()->routeIs('avaliacoes.show') ? 'active' : '' }}"
+       href="{{ route('avaliacoes.index') }}">
+        <i class="bi bi-calendar2-check"></i> Pedidos de Avaliação
+    </a>
+</li>
                     @endauth
                 </ul>
 
@@ -367,6 +382,14 @@
                             {{ Auth::user()->name ?? 'Utilizador' }}
                         </div>
                         <ul class="dropdown-menu dropdown-menu-end mt-2 shadow border-0 rounded-3">
+                            @if (Route::has('register'))
+                                <li>
+                                    <a href="{{ route('register') }}" class="dropdown-item py-2">
+                                        <i class="bi bi-person-plus me-2"></i> Criar Conta
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            @endif
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

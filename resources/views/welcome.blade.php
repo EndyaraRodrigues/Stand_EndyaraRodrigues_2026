@@ -38,7 +38,7 @@
             transition: all 0.3s;
         }
         .btn-login:hover {
-            background-color: #f8f9fa;
+            background-color: #d41e1e;
             transform: translateY(-2px);
         }
         .icon-car {
@@ -59,11 +59,7 @@
         <hr class="my-4">
 
         <div class="d-grid gap-3">
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="btn btn-register btn-danger text-white fw-semibold">
-                    Criar Conta
-                </a>
-            @endif
+            
 
             @if (Route::has('login'))
                 <a href="{{ route('login') }}" class="btn btn-login btn-outline-secondary fw-semibold">
